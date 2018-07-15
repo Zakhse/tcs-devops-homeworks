@@ -1,0 +1,43 @@
+#!/bin/bash
+
+while [ -n "$1" ]
+do
+  case "$1" in
+    --log) log_path_from_params="$2"
+        shift;;
+    --name) proc_name_from_params="$2"
+        shift ;;
+    --path) exec_path_from_params="$2"
+        shift ;;
+    *) echo "Invalid params are provided"
+       exit 1;;
+  esac
+shift
+done
+
+DEFAULT_SERVICE="httpd"
+SERVICE=${proc_name_from_params:-$DEFAULT_SERVICE}
+DEFAULT_LOG_PATH="/root/${SERVICE}_start.log"
+LOG_PATH=${log_path_from_params:-$DEFAULT_LOG_PATH}
+DEFAULT_EXECUTION_PATH="~/homework/materials/class03/src/tinyhttpd/tinyhttpd/httpd"
+EXECUTION_PATH=${exec_path_from_params:-$DEFAULT_EXECUTION_PATH}
+
+# echo `date`
+
+if pgrep -x "$SERVICE" &>/dev/null; then
+   echo "$SERVICE is running"
+   exit 0
+fi
+
+if [ ! -e $LOG_PATH ]; then
+  touch $LOG_PATH
+fi
+
+if [ -w $LOG_PATH ]; then
+  echo "${SERVICE} was not running, starting..." > $LOG_PATH
+else
+  echo "Oooh, log file ${LOG_PATH} is not writeble!"
+  exit 1
+fi
+
+exec $EXECUTION_PATH
