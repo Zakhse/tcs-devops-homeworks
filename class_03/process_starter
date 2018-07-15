@@ -19,7 +19,7 @@ DEFAULT_SERVICE="httpd"
 SERVICE=${proc_name_from_params:-$DEFAULT_SERVICE}
 DEFAULT_LOG_PATH="/root/${SERVICE}_start.log"
 LOG_PATH=${log_path_from_params:-$DEFAULT_LOG_PATH}
-DEFAULT_EXECUTION_PATH="~/homework/materials/class03/src/tinyhttpd/tinyhttpd/httpd"
+DEFAULT_EXECUTION_PATH="/home/user06/homework/materials/class03/src/tinyhttpd/tinyhttpd/httpd"
 EXECUTION_PATH=${exec_path_from_params:-$DEFAULT_EXECUTION_PATH}
 
 # echo `date`
@@ -34,7 +34,8 @@ if [ ! -e $LOG_PATH ]; then
 fi
 
 if [ -w $LOG_PATH ]; then
-  echo "${SERVICE} was not running, starting..." > $LOG_PATH
+  log_time=`date -u +"%Y-%m-%d %H:%M:%SZ"`
+  echo "<${log_time}> ${SERVICE} was not running, starting..." >> $LOG_PATH
 else
   echo "Oooh, log file ${LOG_PATH} is not writeble!"
   exit 1
